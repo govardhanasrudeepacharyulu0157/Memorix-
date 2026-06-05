@@ -119,19 +119,11 @@ async function generateFlashcards() {
   try {
     const prompt = buildPrompt(notes, cardType, cardCount, selectedDifficulty);
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-       model: 'llama-3.3-70b-versatile',
-        max_tokens: 3000,
-        temperature: 0.7,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
+    const response = await fetch('/api/generate', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ prompt: prompt })
+});
 
     if (!response.ok) {
       const err = await response.json();
