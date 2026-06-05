@@ -1,0 +1,145 @@
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memorix — AI Flashcard Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">Memorix</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+      <span class="nav-badge">V1 Free</span>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-tag">✨ Powered by AI</div>
+    <h1 class="hero-title">Turn Any Notes Into<br /><span class="gradient-text">Smart Flashcards</span></h1>
+    <p class="hero-subtitle">Paste your notes, pick a card type, and let Memorix do the rest. Study smarter, not harder.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">10s</span><span class="stat-label">Generation Time</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Free Forever</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">AI</span><span class="stat-label">Powered</span></div>
+    </div>
+  </section>
+
+  <!-- INPUT SECTION -->
+  <section class="input-section">
+    <div class="card-container">
+
+      <!-- API KEY -->
+      <div class="input-group">
+        <label class="input-label">🔑 Your Groq API Key</label>
+        <input type="password" id="apiKey" class="input-field" placeholder="gsk_xxxxxxxxxxxxxxxxxx" />
+        <span class="input-hint">Free at console.groq.com — never stored anywhere</span>
+      </div>
+
+      <!-- NOTES INPUT -->
+      <div class="input-group">
+        <label class="input-label">📝 Paste Your Notes or Type a Topic</label>
+        <textarea id="notesInput" class="textarea-field" placeholder="Example: Paste your Biology chapter, type 'Photosynthesis', or write any topic you want to study..."></textarea>
+        <div class="textarea-footer">
+          <span id="charCount">0 characters</span>
+          <button class="clear-btn" onclick="clearInput()">Clear</button>
+        </div>
+      </div>
+
+      <!-- CARD TYPE + COUNT ROW -->
+      <div class="options-row">
+        <div class="input-group half">
+          <label class="input-label">🃏 Card Type</label>
+          <select id="cardType" class="select-field">
+            <option value="qa">Q&A Flashcards</option>
+            <option value="mcq">Multiple Choice (MCQ)</option>
+            <option value="truefalse">True or False</option>
+            <option value="fillinblank">Fill in the Blank</option>
+          </select>
+        </div>
+        <div class="input-group half">
+          <label class="input-label">🔢 Number of Cards</label>
+          <select id="cardCount" class="select-field">
+            <option value="5">5 Cards</option>
+            <option value="8" selected>8 Cards</option>
+            <option value="10">10 Cards</option>
+            <option value="15">15 Cards</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- DIFFICULTY -->
+      <div class="input-group">
+        <label class="input-label">🎯 Difficulty Level</label>
+        <div class="difficulty-row">
+          <button class="diff-btn active" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
+          <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium')">Medium</button>
+          <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard</button>
+          <button class="diff-btn" data-diff="mixed" onclick="setDifficulty('mixed')">Mixed</button>
+        </div>
+      </div>
+
+      <!-- GENERATE BUTTON -->
+      <button class="generate-btn" id="generateBtn" onclick="generateFlashcards()">
+        <span id="btnText">⚡ Generate Flashcards</span>
+        <div class="btn-shine"></div>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- RESULTS SECTION -->
+  <section class="results-section" id="resultsSection" style="display:none;">
+
+    <!-- TOOLBAR -->
+    <div class="results-toolbar">
+      <div class="results-info">
+        <h2 class="results-title">Your Flashcards</h2>
+        <span class="results-count" id="resultsCount">0 cards</span>
+      </div>
+      <div class="toolbar-actions">
+        <button class="tool-btn" onclick="shuffleCards()" title="Shuffle">🔀 Shuffle</button>
+        <button class="tool-btn" onclick="resetCards()" title="Reset">🔄 Reset</button>
+        <button class="tool-btn" onclick="copyAllCards()" title="Copy All">📋 Copy</button>
+      </div>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+      <span class="progress-text" id="progressText">0 / 0 reviewed</span>
+    </div>
+
+    <!-- CARDS GRID -->
+    <div class="cards-grid" id="cardsGrid"></div>
+
+    <!-- COMPLETION MESSAGE -->
+    <div class="completion-msg" id="completionMsg" style="display:none;">
+      <div class="completion-icon">🎉</div>
+      <h3>All Cards Reviewed!</h3>
+      <p>Great job! You've gone through all your flashcards.</p>
+      <button class="generate-btn small" onclick="resetCards()">🔄 Review Again</button>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Built with ❤️ by <strong>Memorix</strong> — Free AI Flashcard Generator</p>
+    <p class="footer-sub">Powered by Groq AI • 100% Free • No Login Required</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
