@@ -95,7 +95,7 @@ Content: ${notes}`
 
 // ── GENERATE FLASHCARDS ──
 async function generateFlashcards() {
-  const apiKey = document.getElementById('apiKey').value.trim();
+  const apiKey = " ;
   const notes = document.getElementById('notesInput').value.trim();
   const cardType = document.getElementById('cardType').value;
   const cardCount = parseInt(document.getElementById('cardCount').value);
